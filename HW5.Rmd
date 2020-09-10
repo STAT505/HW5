@@ -1,0 +1,81 @@
+---
+title: "HW5"
+output: pdf_document
+---
+
+# HW5
+
+All students will receive full credit for questions 1, 2, and 3
+
+### 1. 1 point
+
+What has been your favorite part of this class?
+
+### 2. 1 point
+
+What has been your least favorite part of this class?
+
+### 3. 1 point
+
+What could be changed to create a better learning environment?
+
+
+### 4. (ROS 4.3) 2 points
+_Comparison of proportions:_ You want to gather data to determine which of two students is a better basketball shooter. One of them shoots with 30% accuracy and the other is a 40% shooter. Each student takes 20 shots and you then compare their shooting percentages. What is the probability that the better shooter makes more shots in this small experiment?
+
+### 5. (based on ROS 4.4) 5 points
+_Designing an experiment:_ Now, you want to gather data to determine which of the two students is a better basketball shooter. Assume student one has 30% accuracy and student 2 has 40% accuracy. The goal is to choose N, the number of shots taken, so that you have a good chance to identify the better shooter. Your collaborator, the head basketball coach, says they have time for each student to take up to 200 shots. Create a graphic that shows the probability that better shooter makes more shots as a function of N (Consider starting with 20 shots and going to 40, 60,80,100,120,140,160,180,200).
+
+### 6.
+
+#### a. (4 points)
+Run the code below and describe the data simulation process and the expected results (minimum p-value) for model 1 and model 2.
+
+```{r}
+# initialize
+set.seed(09102020)
+num_replications <- 100
+num_obs <- 50
+num_preds <- 10
+
+# simulate model 1 data
+X <- matrix(rnorm(num_preds * num_obs), num_obs, num_preds)
+y <- rnorm(num_obs)
+
+# fit and summarize model 1
+lm1 <- lm(y ~ X)
+summary(lm1)
+min_pvalue1<- min(summary(lm1)$coefficients[,4])
+
+# simulate model 2 data
+X <- matrix(rnorm(num_preds * num_obs), num_obs, num_preds)
+y <- X[,1] + rnorm(num_obs)
+
+#fit and summarize model 2
+lm2 <- lm(y ~ X)
+summary(lm2)
+min_pvalue2 <- min(summary(lm2)$coefficients[,4])
+```
+
+#### b. (4 points)
+Now run the code below which loops through part a 100 times. Summarize your findings for the minimum p-values for each model. What proportion of the time is there a _significant_ result for each model?
+
+```{r}
+#intialize
+set.seed(09102020)
+min_pvalue <- matrix(0, num_replications, 2)
+
+for (rep in 1:num_replications){
+  # fit model 1 and store min p-value
+  X <- matrix(rnorm(num_preds * num_obs), num_obs, num_preds)
+  y <- rnorm(num_obs)
+  lm1 <- lm(y ~ X)
+  min_pvalue[rep,1] <- min(summary(lm1)$coefficients[,4])
+  
+  # fit model 2 and store min p-value
+  X <- matrix(rnorm(num_preds * num_obs), num_obs, num_preds)
+  y <- X[,1] + rnorm(num_obs)
+  lm2 <- lm(y ~ X)
+  min_pvalue[rep,2] <- min(summary(lm2)$coefficients[,4])
+}
+```
